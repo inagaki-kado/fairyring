@@ -64,6 +64,21 @@
 
   .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
 
+
+  /* ── Page nav ── */
+  .page-nav {
+    display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 14px;
+    position: relative; z-index: 1;
+  }
+  .nav-link {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 20px;
+    background: white; border: 2px solid var(--border); border-radius: 999px;
+    color: var(--text2); font-size: 0.82rem; font-weight: 700; text-decoration: none;
+    font-family: "Nunito", sans-serif; box-shadow: var(--shadow); transition: all 0.2s;
+  }
+  .nav-link:hover { border-color: var(--accent1); color: var(--accent1); background: var(--bg2); }
+  .nav-link.active { background: var(--bg2); border-color: var(--accent1); color: var(--accent1); }
+
   /* ── Corner sections ── */
   .corners-wrap { padding: 28px 0 0; }
   .corner-section {
@@ -234,8 +249,6 @@
     width: 52px; height: 52px; object-fit: contain;
     animation: fairyFloat 2.8s ease-in-out infinite;
     display: inline-block; vertical-align: middle;
-    opacity: 0.82;
-    mix-blend-mode: multiply;
     filter: drop-shadow(0 2px 6px rgba(192,132,252,0.35));
     flex-shrink: 0;
   }
@@ -263,6 +276,10 @@
     <div class="logo-en">🧚 フェアリーリング 🧚</div>
     <div class="logo-ja">ボードゲームサークル フェアリーリング</div>
     <div class="header-desc">みんなで遊ぼう！ゲームライブラリ 🎲</div>
+    <div class="page-nav">
+      <a class="nav-link" href="index.html">🗓️ ゲーム会スケジュール</a>
+      <a class="nav-link active" href="fairyring-games.html">🎲 ゲームライブラリ</a>
+    </div>
     <div class="total-badge" id="totalBadge">全 <span id="totalNum">0</span> タイトル所蔵</div>
   </div>
 </header>
