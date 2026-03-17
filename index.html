@@ -76,6 +76,19 @@
     font-family: "Nunito", sans-serif;
   }
 
+  .page-nav {
+    display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 14px;
+    position: relative; z-index: 1;
+  }
+  .nav-link {
+    display: inline-flex; align-items: center; gap: 6px; padding: 8px 20px;
+    background: white; border: 2px solid var(--border); border-radius: 999px;
+    color: var(--text2); font-size: 0.82rem; font-weight: 700; text-decoration: none;
+    font-family: "Nunito", sans-serif; box-shadow: var(--shadow); transition: all 0.2s;
+  }
+  .nav-link:hover { border-color: var(--accent1); color: var(--accent1); background: var(--bg2); }
+  .nav-link.active { background: var(--bg2); border-color: var(--accent1); color: var(--accent1); }
+
   /* ── Main layout ── */
   .main-wrap {
     max-width: 900px;
@@ -463,8 +476,10 @@
     <div style="font-size:0.75rem; color:var(--text3); letter-spacing:0.12em; margin-bottom:6px;">楽しく遊ぼう！ 成増ゲームの会</div>
     <div class="logo-en">フェアリーリング</div>
     <div class="logo-ja">ボードゲームサークル フェアリーリング（通称：ふぇありん）</div>
-    <div class="header-sub">✨ ゲーム会スケジュール ✨</div>
-    <div class="page-badge">🎲 次のゲーム会はいつ？</div>
+    <div class="page-nav">
+      <a class="nav-link active" href="index.html">🗓️ ゲーム会スケジュール</a>
+      <a class="nav-link" href="fairyring-games.html">🎲 ゲームライブラリ</a>
+    </div>
   </div>
 </header>
 
@@ -541,7 +556,7 @@
         &nbsp;&nbsp;<a href="https://lin.ee/fSUlo9O" target="_blank" rel="noopener">→ 公式LINEを友だち追加する</a>　（締切：開催前日の23:59まで）</span></div>
       <div class="note-row">📱 <span>※スマートフォンからのお申込み限定です</span></div>
       <div class="note-row">👥 <span>複数名で参加される場合、代表者がまとめて予約していただいても大丈夫です</span></div>
-      <div class="note-row">🔢 <span>定員20名（スタッフ含む）を超えた場合、参加をお断りする場合があります。最新の予約状況は<a href="https://simblo.net/u/aimWXu" target="_blank" rel="noopener">公式ブログの開催情報ページ</a>でご確認ください</span></div>
+      <div class="note-row">🔢 <span>定員20名（スタッフ含む）を超えた場合、参加をお断りする場合があります。最新の予約状況はこのページでご確認ください</span></div>
       <div class="note-row">🌟 <span>「当日急に参加したい！」という場合も、事前に公式LINEへご連絡ください。当日の参加状況を確認してご返答します（イベント運営中はすぐに返信できない場合があります）。</span></div>
     </div>
   </div>
@@ -552,7 +567,7 @@
     <div class="info-section-title">⚠️ 参加にあたっての注意事項</div>
     <div class="info-note">
       <div class="note-row">🎓 <span>参加対象は<strong>中学生以上</strong>。小学生以下の方は当日の状況によりお断りする場合があります（事前に公式LINEまでご相談ください）</span></div>
-      <div class="note-row">🌟 <span>中学生・高校生の方には参加特典があります。当日スタッフまでお声がけください</span></div>
+      <div class="note-row">🌟 <span>中学生・高校生の方は学割価格（200円）でご参加できます。受付時にスタッフに学生証を提示してください。</span></div>
       <div class="note-row">👪 <span>未成年の方は、保護者にこのページを見せて参加の了解を取るようにしてください</span></div>
       <div class="note-row">📋 <span>感染症発生時などの連絡先確保のため、当日に個人情報をお伺いします（回答必須）</span></div>
       <div class="note-row" style="margin-top:8px; font-weight:700; color:var(--text);">🍱 会場内での飲食について</div>
@@ -579,6 +594,7 @@
   <div class="footer-links">
     <a class="footer-link-item" href="https://simblo.net/u/aimWXu" target="_blank" rel="noopener">📝 公式ブログ</a>
     <a class="footer-link-item" href="https://lin.ee/fSUlo9O" target="_blank" rel="noopener">💬 公式LINE（参加予約）</a>
+    <a class="footer-link-item" href="fairyring-games.html">🎲 ゲームライブラリ</a>
   </div>
   <p>🧚 Fairy Ring（ふぇありん） — ボードゲームサークル &nbsp;|&nbsp; 成増ゲームの会</p>
 </footer>
