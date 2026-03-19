@@ -20,7 +20,7 @@
     --accent1: #c084fc;
     --accent2: #f472b6;
     --accent3: #34d399;
-    --new-bg: #fff7ed; --new-border: #fed7aa; --new-accent: #fb923c;
+    --new-bg: #fdf4ff; --new-border: #e9d5ff; --new-accent: #a855f7;
     --std-bg: #f0fdf4; --std-border: #bbf7d0; --std-accent: #22c55e;
     --shadow: 0 2px 16px rgba(160,100,220,0.10);
     --shadow-hover: 0 8px 32px rgba(160,100,220,0.18);
@@ -138,7 +138,7 @@
 
   .badge-row { display: flex; gap: 5px; padding: 5px 16px 0; flex-wrap: wrap; }
   .badge { font-size: 0.65rem; font-weight: 800; padding: 2px 8px; border-radius: 999px; font-family: "Nunito",sans-serif; }
-  .badge-new { background: #ffedd5; color: var(--new-accent); border: 1.5px solid var(--new-border); }
+  .badge-new { background: #f3e8ff; color: var(--new-accent); border: 1.5px solid var(--new-border); }
   .badge-std { background: #dcfce7; color: var(--std-accent); border: 1.5px solid var(--std-border); }
 
   .card-catchphrase { padding: 5px 16px 0; font-size: 0.75rem; color: var(--accent2); font-style: italic; font-weight: 500; line-height: 1.45; }
@@ -290,8 +290,8 @@
   <div class="corners-wrap">
     <div class="corner-section">
       <div class="corner-header new">
-        <span class="corner-icon">🆕</span>
-        メンバーの新入手ゲーム（次回持っていくかも？）
+        <span class="corner-icon">✨</span>
+        メンバーのオススメ（メンバーのマイブームや新しく買ったゲームなど。次回もっていくかも！）
         <span class="corner-count new" id="newCount">0件</span>
       </div>
       <div class="corner-scroll" id="newScroll"></div>
@@ -480,7 +480,7 @@ function cardHTML(g, extraClass) {
     return '<span class="tag mechanic">' + esc(t.trim()) + '</span>';
   }).join("");
 
-  var badges = (isNew ? '<span class="badge badge-new">🆕 新入荷</span>' : "")
+  var badges = (isNew ? '<span class="badge badge-new">✨ イチオシ</span>' : "")
              + (isStd ? '<span class="badge badge-std">⭐ 定番</span>'    : "");
 
   var dsn = designer.length > 13 ? designer.slice(0,12) + "…" : designer;
