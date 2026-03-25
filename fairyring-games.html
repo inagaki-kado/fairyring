@@ -477,7 +477,7 @@ function cardHTML(g, extraClass) {
   var catchp   = g["キャッチフレーズ"] || "";
   var desc     = g["ゲーム概要"] || "";
   var url      = g["URL"]      || "";
-  var isNew    = g["新入荷"] == 1;
+  var isNew    = g["pickup"] == 1;
   var isStd    = g["定番"]   == 1;
   var colors   = getColors(theme);
 
@@ -514,7 +514,7 @@ function cardHTML(g, extraClass) {
 
 // ── Corner sections ───────────────────────────────────────────────────
 function buildCorners() {
-  var newGames = ALL_GAMES.filter(function(g) { return g["新入荷"] == 1; });
+  var newGames = ALL_GAMES.filter(function(g) { return g["pickup"] == 1; });
   var stdGames = ALL_GAMES.filter(function(g) { return g["定番"]   == 1; });
 
   document.getElementById("newCount").textContent = newGames.length + "件";
