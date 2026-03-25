@@ -254,11 +254,27 @@
   }
 
   .card-inner {
-    padding: 20px 24px 22px;
+    padding: 20px 24px 16px;
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 0 24px;
   }
+  .card-reserve {
+    margin: 0 24px 12px;
+    text-align: center;
+  }
+  .card-reserve a {
+    display: inline-block;
+    background: #06c755;
+    color: white;
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 11px 32px;
+    border-radius: 999px;
+    text-decoration: none;
+    line-height: 1.4;
+  }
+  .card-reserve a:hover { opacity: 0.88; }
 
   /* Date column */
   .date-col {
@@ -960,13 +976,18 @@ function buildCard(event, isNearest) {
     h += '<a class="map-link" href="' + esc(mapUrl) + '" target="_blank" rel="noopener"><span class="map-icon">🗺️</span> Google マップで見る</a>';
   }
 
+  h += '</div>'; // info-col
+  h += '</div>'; // card-inner
+
+  // Reserve button
+  h += '<div class="card-reserve">';
+  h += '<a href="https://lin.ee/fSUlo9O" target="_blank" rel="noopener">💬 予約する（LINE公式アカウント）</a>';
+  h += '</div>';
+
   // Map embed
   if (embedUrl) {
     h += '<div class="map-embed"><iframe src="' + esc(embedUrl) + '" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>';
   }
-
-  h += '</div>'; // info-col
-  h += '</div>'; // card-inner
   h += '</div>'; // event-card
   return h;
 }
