@@ -189,9 +189,12 @@
 
   /* ── Cards container ── */
   .cards-container {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+  }
+  .event-card.nearest {
+    grid-column: 1 / -1;
   }
 
   /* ── Event card ── */
@@ -474,6 +477,10 @@
   .footer-link-item { display: flex; align-items: center; gap: 5px; }
 
   /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .cards-container { grid-template-columns: 1fr; }
+    .event-card.nearest { grid-column: auto; }
+  }
   @media (max-width: 540px) {
     .fairy-img-wrap { width: 100px; }
     .card-inner { grid-template-columns: auto 1fr; gap: 0 16px; }
