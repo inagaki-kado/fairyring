@@ -169,6 +169,21 @@
   .card-tags { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 16px 12px; }
   .tag { font-size: 0.65rem; padding: 3px 9px; border-radius: 999px; font-weight: 700; background: var(--bg2); color: var(--text2); border: 1.5px solid var(--border); }
   .tag.mechanic { background: #fff0f8; color: var(--accent2); border-color: #fce7f3; }
+  .tag.tag-clickable { cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s; }
+  .tag.tag-clickable:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(160,100,220,0.2); border-color: var(--accent1); }
+  .tag.tag-clickable:focus { outline: 2px solid var(--accent1); outline-offset: 2px; }
+  .tag-filter-bar {
+    display: none; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px;
+    padding: 10px 16px; margin-top: 10px; background: var(--bg2); border-radius: 999px;
+    border: 1.5px dashed var(--accent1); font-size: 0.8rem; color: var(--text2);
+  }
+  .tag-filter-text strong { color: var(--accent1); font-weight: 800; }
+  .btn-tag-clear {
+    font-family: inherit; font-size: 0.75rem; font-weight: 700;
+    padding: 6px 14px; border-radius: 999px; border: 2px solid var(--border);
+    background: white; color: var(--text2); cursor: pointer; transition: background 0.2s, border-color 0.2s;
+  }
+  .btn-tag-clear:hover { background: var(--bg3); border-color: var(--accent2); color: var(--accent2); }
 
   .card-link {
     display: flex; align-items: center; gap: 6px; padding: 9px 16px;
@@ -353,6 +368,10 @@
         <select id="themeFilter"><option value="">すべて</option></select>
       </div>
     </div>
+    <div id="tagFilterBar" class="tag-filter-bar" style="display:none;" aria-live="polite">
+      <span class="tag-filter-text">タグで絞り込み: <strong id="tagFilterLabel"></strong></span>
+      <button type="button" class="btn-tag-clear" id="clearTagFilterBtn">タグの絞り込みを解除</button>
+    </div>
   </div>
 
   <!-- ─ Results ─ -->
@@ -371,6 +390,8 @@
 <script>
 
 var ALL_GAMES = []; // GASから動的取得
+/** カード上のタグクリックで設定（テーマ／メカニクスいずれかに一致するゲームを表示） */
+var activeTagFilter = "";
 const GAS_URL = "https://script.google.com/macros/s/AKfycbwTwt4XpaFFuSIF6Nith5YTHcbgOP-EuASUiE5b8RRw0nCW3VlrpmLeSJpMNljN5tAZ/exec";
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -379,7 +400,6 @@ window.addEventListener('DOMContentLoaded', () => {
     .then(data => {
       ALL_GAMES = data;
       buildSelects();
-      buildCorners();
       applyFilters();
     })
     .catch(error => {
@@ -417,6 +437,22 @@ function esc(s) {
   return String(s)
     .replace(/&/g,"&amp;").replace(/</g,"&lt;")
     .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function escAttr(s) {
+  return String(s)
+    .replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+}
+
+function gameHasTag(g, tag) {
+  tag = String(tag || "").trim();
+  if (!tag) return false;
+  var themes = (g["テーマ"] || "").split("/").map(function(t) { return t.trim(); });
+  var mechs = (g["メカニクス"] || "").split("/").map(function(t) { return t.trim(); });
+  var i;
+  for (i = 0; i < themes.length; i++) if (themes[i] === tag) return true;
+  for (i = 0; i < mechs.length; i++) if (mechs[i] === tag) return true;
+  return false;
 }
 
 // ── Build filter selects ──────────────────────────────────────────────
@@ -482,10 +518,12 @@ function cardHTML(g, extraClass) {
   var colors   = getColors(theme);
 
   var themeTags = theme.split("/").filter(Boolean).map(function(t) {
-    return '<span class="tag">' + esc(t.trim()) + '</span>';
+    var t0 = t.trim();
+    return '<span class="tag tag-clickable" role="button" tabindex="0" data-tag="' + escAttr(t0) + '" title="このタグで絞り込む">' + esc(t0) + '</span>';
   }).join("");
   var mechTags = mech.split("/").filter(Boolean).slice(0,2).map(function(t) {
-    return '<span class="tag mechanic">' + esc(t.trim()) + '</span>';
+    var t0 = t.trim();
+    return '<span class="tag mechanic tag-clickable" role="button" tabindex="0" data-tag="' + escAttr(t0) + '" title="このタグで絞り込む">' + esc(t0) + '</span>';
   }).join("");
 
   var badges = (isNew ? '<span class="badge badge-new">✨ イチオシ</span>' : "")
@@ -516,6 +554,10 @@ function cardHTML(g, extraClass) {
 function buildCorners() {
   var newGames = ALL_GAMES.filter(function(g) { return g["pickup"] == 1; });
   var stdGames = ALL_GAMES.filter(function(g) { return g["定番"]   == 1; });
+  if (activeTagFilter) {
+    newGames = newGames.filter(function(g) { return gameHasTag(g, activeTagFilter); });
+    stdGames = stdGames.filter(function(g) { return gameHasTag(g, activeTagFilter); });
+  }
 
   document.getElementById("newCount").textContent = newGames.length + "件";
   document.getElementById("stdCount").textContent = stdGames.length + "件";
@@ -533,7 +575,8 @@ function isFiltered() {
     || document.getElementById("playerMaxFilter").value !== ""
     || document.getElementById("timeMinFilter").value !== ""
     || document.getElementById("timeMaxFilter").value !== ""
-    || document.getElementById("themeFilter").value !== "";
+    || document.getElementById("themeFilter").value !== ""
+    || activeTagFilter !== "";
 }
 
 function shuffled(arr) {
@@ -568,9 +611,20 @@ function applyFilters() {
     if (pMax > 0 && gMinP > 0 && gMinP > pMax) return false;
     if (tMin > 0 && gMaxT > 0 && gMaxT < tMin) return false;
     if (tMax > 0 && gMinT > 0 && gMinT > tMax) return false;
-    if (themeVal && g["テーマ"].indexOf(themeVal) === -1) return false;
+    if (themeVal && (g["テーマ"] || "").indexOf(themeVal) === -1) return false;
+    if (activeTagFilter && !gameHasTag(g, activeTagFilter)) return false;
     return true;
   });
+
+  var tagBar = document.getElementById("tagFilterBar");
+  var tagLbl = document.getElementById("tagFilterLabel");
+  if (activeTagFilter) {
+    tagBar.style.display = "flex";
+    tagLbl.textContent = activeTagFilter;
+  } else {
+    tagBar.style.display = "none";
+    tagLbl.textContent = "";
+  }
 
   // フィルター未指定 → ランダム10件
   var filtered = isFiltered();
@@ -595,6 +649,8 @@ function applyFilters() {
     countEl.innerHTML = '<span>' + result.length + '</span> 件表示中';
   }
 
+  buildCorners();
+
   var grid = document.getElementById("gameGrid");
   if (display.length === 0) {
     grid.innerHTML = '<div class="empty-state"><span class="empty-icon">🎲</span><p class="empty-text">条件に合うゲームが見つかりませんでした 😢</p></div>';
@@ -613,6 +669,7 @@ function applyFilters() {
 }
 
 function resetFilters() {
+  activeTagFilter = "";
   document.getElementById("searchInput").value = "";
   document.getElementById("playerMinFilter").value = "";
   document.getElementById("playerMaxFilter").value = "";
@@ -638,9 +695,40 @@ function setView(v) {
     el.addEventListener("change", applyFilters);
   });
 document.getElementById("resetBtn").addEventListener("click", resetFilters);
+document.getElementById("clearTagFilterBtn").addEventListener("click", function() {
+  activeTagFilter = "";
+  applyFilters();
+});
 document.getElementById("reshuffleBtn").addEventListener("click", applyFilters);
 document.getElementById("gridBtn").addEventListener("click", function() { setView("grid"); });
 document.getElementById("listBtn").addEventListener("click", function() { setView("list"); });
+
+document.addEventListener("click", function(e) {
+  var el = e.target && e.target.closest && e.target.closest(".tag.tag-clickable[data-tag]");
+  if (!el) return;
+  e.preventDefault();
+  var t = el.getAttribute("data-tag");
+  if (t) {
+    activeTagFilter = t;
+    applyFilters();
+    var fp = document.querySelector(".filter-panel");
+    if (fp) fp.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
+
+document.addEventListener("keydown", function(e) {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  var el = e.target && e.target.closest && e.target.closest(".tag.tag-clickable[data-tag]");
+  if (!el) return;
+  e.preventDefault();
+  var t = el.getAttribute("data-tag");
+  if (t) {
+    activeTagFilter = t;
+    applyFilters();
+    var fp = document.querySelector(".filter-panel");
+    if (fp) fp.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+});
 
 // ── Init ── DOMContentLoaded内で実行（GASデータ取得後に呼び出し）
 
